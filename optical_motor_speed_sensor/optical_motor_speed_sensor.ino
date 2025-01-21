@@ -78,7 +78,7 @@ void setup() {
 
 void loop() {
   // Condition to run the loop for only 10 seconds
-  // if (micros() - startTime <= 10 * 1.0e6) {
+  if (micros() - startTime <= 15 * 1.0e6) {
     // Read the counter in an atomic block to avoid potential misreads
     int counterCopy = 0;
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
@@ -110,8 +110,8 @@ void loop() {
       direction = -1;
     }
     int pwm_value = (int)fabs(actuating_signal);  // PWM ranges from 0 (0% duty cycle) to 255 (100% duty cycle)
-    if (pwm_value > 170) {                        // The interrupt cannot measure maximum speed
-      pwm_value = 170;
+    if (pwm_value > 255) {                        // The interrupt cannot measure maximum speed
+      pwm_value = 255;
     }
 
     // Actuate the motor
@@ -137,23 +137,21 @@ void loop() {
     }
 
     // Log the values in a CSV format
-    // Serial.print(currTimeMillis);
-    // Serial.print(",");
-    // Serial.print(speed);
-    // Serial.print(",");
+    Serial.print(currTimeMillis);
+    Serial.print(",");
     Serial.print(filtered_speed);
-    Serial.print(",");
-    Serial.print(error);
-    Serial.print(",");
-    Serial.print(integral_error);
-    Serial.print(",");
-    Serial.print(derivative_error);
+    // Serial.print(",");
+    // Serial.print(error);
+    // Serial.print(",");
+    // Serial.print(integral_error);
+    // Serial.print(",");
+    // Serial.print(derivative_error);
     Serial.print(",");
     Serial.println(actuating_signal);
 
     // Add a delay of 1ms to maintain a continuous sampling freq
     delay(1);
-  // } else {
-  //   stopMotor();
-  // }
+  } else {
+    stopMotor();
+  }
 }
